@@ -13,6 +13,7 @@ app.post('./users', (request: Request, response: Response) => {
     
 });
 
-app.listen(8080, () => {
-    console.log('API está rodando...' );
-});       
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+    console.log('API running...');
+});      
