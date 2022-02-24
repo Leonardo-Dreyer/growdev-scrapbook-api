@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-app.get('./users', (request: Request, response: Response) => {
+app.get('/', (request: Request, response: Response) => {
     return response.json({
         menssage: 'Olá, mundo'
     });
