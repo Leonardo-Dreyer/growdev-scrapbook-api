@@ -10,6 +10,8 @@ app.use(cors());
 
 const users: User[] = [];
 
+app.get('/');
+
 function validateUser(request: Request, response: Response, next: NextFunction) {
     const { name, password, repeatPassword, logged } = request.body;
     if (!name || name.length < 3 || !password || password.length < 3 || password !== repeatPassword) {
