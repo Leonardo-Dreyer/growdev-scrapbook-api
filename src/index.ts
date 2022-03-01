@@ -10,7 +10,9 @@ app.use(cors());
 
 const users: User[] = [];
 
-app.get('/');
+app.get('/', (request: Request, response: Response) => {
+    return response.sendStatus(200).json();
+});
 
 function validateUser(request: Request, response: Response, next: NextFunction) {
     const { name, password, repeatPassword, logged } = request.body;
