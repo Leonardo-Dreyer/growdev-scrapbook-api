@@ -16,6 +16,8 @@
     "express": "^4.17.2"
   },
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts"
+    "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
+    "build": "tsc",
+    "start": "node ./dist"
   }
 }
