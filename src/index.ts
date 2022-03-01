@@ -10,7 +10,7 @@ app.use(cors());
 
 const users: User[] = [];
 
-function validateUser(request: any, response: any, next: NextFunction) {
+function validateUser(request: Request, response: Response, next: NextFunction) {
     const { name, password, repeatPassword, logged } = request.body;
     if (!name || name.length < 3 || !password || password.length < 3 || password !== repeatPassword) {
         return response.sendStatus(400).json();
@@ -20,19 +20,19 @@ function validateUser(request: any, response: any, next: NextFunction) {
         } else {
             users.find(user => {
                 if (user.name === name) {
-                    return response.sendStatus(400).json();
+                    return response.sendStatus(401).json();
                 };
-            })
+            });
             next();
         };
     };
 };
 
-function validateMessages(request: any, response: any, next: NextFunction) {
+function validateMessages(request: Request, response: Response, next: NextFunction) {
     const { descrition, detailing } = request.body;
 
     if (!descrition || !detailing) {
-        return response.status(400).json()
+        return response.sendStatus(400).json();
     };
     next();
 };
@@ -41,7 +41,7 @@ function verifyLog(request: Request, response: Response, next: NextFunction) {
     if (request.user = users.find(user => user.logged === true)) {
         next();
     } else {
-        return response.status(404).json();
+        return response.sendStatus(401).json();
     };
 };
 
@@ -70,7 +70,7 @@ app.post('/users/messages', verifyLog, validateMessages, (request: Request, resp
 
 app.get('/users/messages', verifyLog, (request: Request, response: Response) => {
     const user: User = request.user;
-    return response.json(user.messages)
+    return response.status(200).json(user.messages);
 });
 
 app.get('/users/messages/:id', (request: Request, response: Response) => {
@@ -78,7 +78,7 @@ app.get('/users/messages/:id', (request: Request, response: Response) => {
     users.forEach(user => {
         user.messages.find(message => {
             if (message.id === parseInt(id)) {
-                return response.json(message);
+                return response.status(200).json(message);
             };
         });
     });
@@ -89,16 +89,16 @@ app.put('/users/:name/password/:password', (request: Request, response: Response
     users.find(user => {
         if (user.name === name && user.password === parseInt(password)) {
             user.logged = true;
-            return response.status(202).json();
+            return response.sendStatus(201).json();
         };
     });
-    return response.status(404).json();
+    return response.sendStatus(401).json();
 });
 
 app.put('/users', verifyLog, (request: Request, response: Response) => {
     const user: User = request.user;
     user.logged = false;
-    return response.status(202).json();
+    return response.sendStatus(201).json();
 });
 
 app.put('/users/messages/:id', verifyLog, (request: Request, response: Response) => {
@@ -109,7 +109,7 @@ app.put('/users/messages/:id', verifyLog, (request: Request, response: Response)
         if (message.id === parseInt(id)) {
             message.descrition = descrition;
             message.detailing = detailing;
-            return response.json(message);
+            return response.status(201).json(message);
         };
     });
 });
@@ -118,7 +118,7 @@ app.delete('/users/messages/:id', verifyLog, (request: Request, response: Respon
     const { id } = request.params;
     const user: User = request.user;
     request.user.messages.splice(user.messages.findIndex(message => message.id === parseInt(id)), 1);    
-    return response.status(204).json();
+    return response.sendStatus(204).json();
 });
 
 const port = process.env.PORT || 8080;
