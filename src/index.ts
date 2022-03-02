@@ -53,8 +53,8 @@ app.post('/users', validateUser, (request: Request, response: Response) => {
     const { name, password, repeatPassword, logged } = request.body;
     const user = new User(
         name,
-        parseInt(password),
-        parseInt(repeatPassword),
+        password,
+        repeatPassword,
         logged
     );
     users.push(user);
@@ -91,7 +91,7 @@ app.get('/users/messages/:id', (request: Request, response: Response) => {
 app.put('/users/:name/password/:password', (request: Request, response: Response) => {
     const { name, password } = request.params;
     users.find(user => {
-        if (user.name === name && user.password === parseInt(password)) {
+        if (user.name === name && user.password === password) {
             user.logged = true;
             return response.sendStatus(201).json();
         };

@@ -6,7 +6,7 @@ export default class User {
 
     constructor(
         public name: string,
-        public password: number,
+        public password: string,
         public repeatPassword: number,
         public logged: boolean
     ) {
