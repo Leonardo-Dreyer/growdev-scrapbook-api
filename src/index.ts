@@ -51,13 +51,8 @@ function verifyLog(request: Request, response: Response, next: NextFunction) {
 
 app.post('/users', validateUser, (request: Request, response: Response) => {
     const { name, password, repeatPassword, logged } = request.body;
-    const user = new User(
-        name,
-        password,
-        repeatPassword,
-        logged
-    );
-    users.push(user);
+    
+    users.push(new User(name, password, repeatPassword, logged));
     return response.status(201).json({ message: 'Usário cadastrado com sucesso!' });
 });
 
