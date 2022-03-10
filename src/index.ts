@@ -24,7 +24,7 @@ function validateUser(request: Request, response: Response, next: NextFunction) 
         } else {
             users.find(user => {
                 if (user.name === name) {
-                    return response.sendStatus(401).json();
+                    return response.sendStatus(200).json();
                 };
             });
             next();
