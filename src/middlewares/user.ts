@@ -9,7 +9,6 @@ export const userValidateMiddleware = async (
 ) => {
     const { email, password } = req.body;
     const userService = new UserService();
-    console.log(email, password);
 
     if (!email || !password) {
         return res.status(HttpBadRequestCode).json({
