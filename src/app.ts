@@ -54,7 +54,6 @@ export default class Application {
     private routers() {
         const routesPath = path.resolve(__dirname, 'routes');
 
-        // TODO: refatorar para buscar apenas arquivos que implmentar a interface HttpRouter
         fs.readdirSync(routesPath).forEach((filename) => {
             import(path.resolve(routesPath, filename)).then((file) => {
                 const instance = new file.default();
