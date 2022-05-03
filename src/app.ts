@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import Database from './core/data/connections/Database';
+import Database from './database/connections/Database';
 import { HttpError } from './errors/HttpErrors';
 import path from 'path';
 import fs from 'fs';

@@ -1,5 +1,5 @@
-import { UserEntity } from '../database/entities/User';
-import { UserDto } from '../../../dto';
+import { UserEntity } from '../entities/User';
+import { UserDto } from '../../dto';
 
 export class UserRepositorie {
     async create(userDto: UserDto) {

@@ -1,4 +1,4 @@
-import { MessageRepositorie } from '../core/data/repositories/Message';
+import { MessageRepositorie } from '../database/repositories/Message';
 import { MessageDto } from '../dto';
 
 export class MessageService {

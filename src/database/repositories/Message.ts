@@ -1,5 +1,5 @@
-import { MessageEntity } from '../database/entities/Message';
-import { MessageDto } from '../../../dto';
+import { MessageEntity } from '../entities/Message';
+import { MessageDto } from '../../dto';
 
 export class MessageRepositorie {
     async create(messageDto: MessageDto) {

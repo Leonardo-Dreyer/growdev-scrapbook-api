@@ -1,4 +1,4 @@
-import { UserRepositorie } from '../core/data/repositories/User';
+import { UserRepositorie } from '../database/repositories/User';
 import { UserDto } from '../dto';
 
 export class UserService {
