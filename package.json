@@ -27,11 +27,11 @@
 		"uuid": "^8.3.2"
 	},
 	"scripts": {
-		"dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
-		"build": "tsc",
 		"start": "node ./dist/server",
-		"migration:show": "ts-node --transpile-only node_modules/typeorm/cli.js migration:show",
-		"migration:run": "ts-node --transpile-only node_modules/typeorm/cli.js migration:run",
-		"migration:revert": "ts-node --transpile-only node_modules/typeorm/cli.js migration:revert"
+		"dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+		"build": "tsc",
+		"migration:show": "ts-node-dev --transpile-only node_modules/typeorm/cli.js migration:show",
+		"migration:run": "ts-node-dev --transpile-only ./node_modules/typeorm/cli.js migration:run",
+		"migration:revert": "ts-node-dev --transpile-only ./node_modules/typeorm/cli.js migration:revert"
 	}
 }

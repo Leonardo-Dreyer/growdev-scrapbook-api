@@ -1,9 +1,9 @@
-const path = require('path');
+const { join } = require('path');
 
 require('dotenv').config();
 
 module.exports = {
-    type: 'postgres',
+    type: process.env.DATABASE_TYPE,
     url: process.env.DATABASE_URL,
     synchronize: false,
     logging: false,
@@ -12,10 +12,8 @@ module.exports = {
             rejectUnauthorized: false
         }
     },
-    migrations: ['src/database/migrations/**/*'],
-    entities: ['src/database/entities/**/*'],
-    /* entities: [path.join(__dirname, '..', 'entities', '**', '*')],
-    migrations: [path.join(__dirname, 'migrations', '**', '*')], */
+    entities: [join(__dirname, '**', '*.migrations.{ts,js}')],
+    entities: [join(__dirname, '**', '*.entities.{ts,js}')],
     cli: {
         entitiesDir: 'src/database/entities',
         migrationsDir: 'src/database/migrations'
