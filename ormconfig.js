@@ -12,7 +12,7 @@ module.exports = {
             rejectUnauthorized: false
         }
     },
-    entities: [join(__dirname, '**', '*.migrations.{ts,js}')],
+    migrations: [join(__dirname, '**', '*.migrations.{ts,js}')],
     entities: [join(__dirname, '**', '*.entities.{ts,js}')],
     cli: {
         entitiesDir: 'src/database/entities',
