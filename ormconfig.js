@@ -1,5 +1,3 @@
-const { join } = require('path');
-
 require('dotenv').config();
 
 module.exports = {
