@@ -1,3 +1,5 @@
+const { join } = require('path');
+
 require('dotenv').config();
 
 module.exports = {
@@ -10,8 +12,8 @@ module.exports = {
             rejectUnauthorized: false
         }
     },
-    migrations: ['dist/database/migrations/**/*'],
-    entities: ['dist/database/entities/**/*'],
+    migrations: [join(__dirname, '**', 'database/migrations/**/*')],
+    entities: [join(__dirname, '**', 'database/entities/**/*')],
     cli: {
         entitiesDir: 'src/database/entities',
         migrationsDir: 'src/database/migrations'
