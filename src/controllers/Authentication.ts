@@ -14,7 +14,6 @@ export default class AuthController {
         const { email, password } = req.body;
         const userService = new UserService();
         const user = await userService.findOne(email);
-        console.log('entrou');
 
         if (!user) {
             return res
