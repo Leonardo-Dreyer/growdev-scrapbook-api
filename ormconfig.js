@@ -12,10 +12,8 @@ module.exports = {
             rejectUnauthorized: false
         }
     },
-    migrations: [path.join(__dirname, '**', 'database/migrations/**/*')],
-    entities: [path.join(__dirname, '**', 'database/entities/**/*')],
-    //migrations: ['src/database/migrations/**/*'],
-    //entities: ['src/database/entities/**/*'],
+    migrations: ['src/database/migrations/**/*'],
+    entities: ['src/database/entities/**/*'],
     cli: {
         entitiesDir: 'src/database/entities',
         migrationsDir: 'src/database/migrations'
