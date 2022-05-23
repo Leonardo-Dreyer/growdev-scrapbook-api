@@ -5,16 +5,21 @@ import {
     HttpBadRequestCode,
     HttpInternalErrorCode
 } from '../constants';
+import { UserServiceInterface } from '../contracts/services/user';
 import { UserDto } from '../dto';
 import { HttpError } from '../errors/HttpErrors';
-import { UserService } from '../services';
 
 export default class UserController {
-    public async store(req: Request, res: Response) {
+    constructor(private service: UserServiceInterface) {}
+
+    index = async (req: Request, res: Response) => {
+        return res.sendStatus(200);
+    };
+
+    store = async (req: Request, res: Response) => {
         const uid = uuid();
         const { email, password } = req.body;
-        const userService = new UserService();
-        const user = await userService.findOne(email);
+        const user = await this.service.findOne(email);
 
         if (user) {
             return res.status(HttpBadRequestCode).json({
@@ -28,15 +33,11 @@ export default class UserController {
             password
         };
         try {
-            await userService.create(dto);
+            await this.service.create(dto);
 
             return res.sendStatus(201);
         } catch {
             throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
         }
-    }
-
-    public async index(req: Request, res: Response) {
-        return res.sendStatus(200);
-    }
+    };
 }

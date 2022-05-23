@@ -1,4 +1,4 @@
-const path = require('path');
+const env = process.env.NODE_ENV === 'production' ? 'dist' : 'src';
 
 require('dotenv').config();
 
@@ -12,8 +12,8 @@ module.exports = {
             rejectUnauthorized: false
         }
     },
-    migrations: ['src/database/migrations/**/*'],
-    entities: ['src/database/entities/**/*'],
+    migrations: [`${env}/database/migrations/**/*`],
+    entities: [`${env}/database/entities/**/*`],
     cli: {
         entitiesDir: 'src/database/entities',
         migrationsDir: 'src/database/migrations'

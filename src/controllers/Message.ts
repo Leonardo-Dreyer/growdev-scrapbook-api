@@ -1,64 +1,66 @@
 import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import { defaultErrorMessage, HttpInternalErrorCode } from '../constants';
+import { MessageServiceInterface } from '../contracts/services/message';
+import { CacheRepositoryInterface } from '../contracts/repositories';
 import { MessageDto } from '../dto';
 import { HttpError } from '../errors/HttpErrors';
-import { MessageService } from '../services';
 
 export default class MessageController {
-    public async store(req: Request, res: Response) {
+    constructor(
+        private service: MessageServiceInterface,
+        private cacheRepository: CacheRepositoryInterface
+    ) {}
+
+    index = async (req: Request, res: Response) => {
         const userUid = req.userUid;
-        const { description, detailing } = req.body;
-
-        const uid = uuid();
-        const messageServise = new MessageService();
-        const dto: MessageDto = {
-            uid,
-            description,
-            detailing,
-            userUid
-        };
-
         try {
-            const message = await messageServise.create(dto);
+            const cache = await this.cacheRepository.find('message:all');
 
-            return res.status(200).json(message);
-        } catch {
-            throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
-        }
-    }
+            if (cache) {
+                return res.json(cache);
+            }
 
-    public async index(req: Request, res: Response) {
-        const uid = req.userUid;
+            const messages = await this.service.find(userUid);
 
-        const messageServise = new MessageService();
+            const json = messages.map((message) => {
+                return {
+                    uid: message.uid,
+                    description: message.description,
+                    detailing: message.detailing
+                };
+            });
 
-        try {
-            const messages = await messageServise.find(uid);
+            await this.cacheRepository.save('message:all', json);
 
             return res.json(messages);
         } catch {
             throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
         }
-    }
+    };
 
-    public async show(req: Request, res: Response) {
+    show = async (req: Request, res: Response) => {
         const { uid } = req.params;
-        const messageServise = new MessageService();
 
         try {
-            const message = await messageServise.findOne(uid);
+            const cache = await this.cacheRepository.find(`message:${uid}`);
+
+            if (cache) {
+                return res.status(200).json(cache);
+            }
+
+            const message = await this.service.findOne(uid);
 
             return res.status(200).json(message);
         } catch {
             throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
         }
-    }
+    };
 
-    public async update(req: Request, res: Response) {
-        const { uid } = req.params;
-        const { description, detailing, userUid } = req.body;
-        const messageServise = new MessageService();
+    store = async (req: Request, res: Response) => {
+        const uid = uuid();
+        const userUid = req.userUid;
+        const { description, detailing } = req.body;
 
         const dto: MessageDto = {
             uid,
@@ -68,24 +70,55 @@ export default class MessageController {
         };
 
         try {
-            const message = await messageServise.update(dto);
+            await this.cacheRepository.delete('message:all');
+
+            const message = await this.service.create(dto);
+
+            await this.cacheRepository.save(`message:${message.uid}`, message);
 
             return res.status(200).json(message);
         } catch {
             throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
         }
-    }
+    };
 
-    public async delete(req: Request, res: Response) {
+    update = async (req: Request, res: Response) => {
         const { uid } = req.params;
-        const messageServise = new MessageService();
+        const { description, detailing, userUid } = req.body;
+
+        const dto: MessageDto = {
+            uid,
+            description,
+            detailing,
+            userUid
+        };
 
         try {
-            await messageServise.delete(uid);
+            await this.cacheRepository.delete(`message:${uid}`);
+            await this.cacheRepository.delete('message:all');
 
-            return res.sendStatus(200);
+            const message = await this.service.update(dto);
+
+            await this.cacheRepository.save(`message:${uid}`, message);
+
+            return res.status(200).json(message);
         } catch {
             throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
         }
-    }
+    };
+
+    delete = async (req: Request, res: Response) => {
+        const { uid } = req.params;
+
+        try {
+            await this.cacheRepository.delete('message:all');
+            await this.cacheRepository.delete(`message:${uid}`);
+
+            await this.service.delete(uid);
+
+            return res.sendStatus(204);
+        } catch {
+            throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
+        }
+    };
 }

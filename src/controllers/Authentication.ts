@@ -8,12 +8,19 @@ import {
     invalidUser,
     invalidPassword
 } from '../constants';
+import { CacheRepositoryInterface } from '../contracts/repositories';
+import { UserServiceInterface } from '../contracts/services/user';
 
 export default class AuthController {
-    public async authentication(req: Request, res: Response) {
+    constructor(
+        private service: UserServiceInterface,
+        private cacheRepository: CacheRepositoryInterface
+    ) {}
+    authentication = async (req: Request, res: Response) => {
         const { email, password } = req.body;
-        const userService = new UserService();
-        const user = await userService.findOne(email);
+        const user = await this.service.findOne(email);
+
+        await this.cacheRepository.delete('message:all');
 
         if (!user) {
             return res
@@ -37,5 +44,5 @@ export default class AuthController {
             user,
             token
         });
-    }
+    };
 }
