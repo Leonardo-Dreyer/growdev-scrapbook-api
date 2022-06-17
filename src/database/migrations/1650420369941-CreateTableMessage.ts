@@ -24,7 +24,7 @@ export class CreateTableMessage1650420369941 implements MigrationInterface {
                         isNullable: false
                     },
                     {
-                        name: 'detailing',
+                        name: 'detail',
                         type: 'text',
                         isNullable: false
                     },

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import MessageController from '../controllers/Message';
-import { authMiddleware, messageValidateMiddleware } from '../middlewares';
+import { authMiddleware, messageMiddleware } from '../middlewares';
 import { HttpRouter } from '../contracts';
 import { MessageService } from '../services';
 import { CacheRepository } from '../database/repositories/Cache';
@@ -17,14 +17,10 @@ export default class MessageRoutes implements HttpRouter {
         routes.post(
             '/message',
             authMiddleware,
-            messageValidateMiddleware,
+            messageMiddleware,
             controller.store
         );
-        routes.put(
-            '/message/:uid',
-            messageValidateMiddleware,
-            controller.update
-        );
+        routes.put('/message/:uid', messageMiddleware, controller.update);
         routes.delete('/message/:uid', controller.delete);
 
         return routes;

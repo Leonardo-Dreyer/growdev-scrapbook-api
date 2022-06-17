@@ -1,6 +1,6 @@
-export type MessageDto = {
+export type MessageDTO = {
     uid: string;
     description: string;
-    detailing: string;
+    detail: string;
     userUid: string;
 };

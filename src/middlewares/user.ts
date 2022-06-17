@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { HttpBadRequestCode } from '../constants';
 import { UserService } from '../services';
 
-export const userValidateMiddleware = async (
+export const userMiddleware = async (
     req: Request,
     res: Response,
     next: NextFunction

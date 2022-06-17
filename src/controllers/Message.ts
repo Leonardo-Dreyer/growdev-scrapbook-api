@@ -1,9 +1,17 @@
 import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
-import { defaultErrorMessage, HttpInternalErrorCode } from '../constants';
+import {
+    defaultErrorMessage,
+    HttpBadRequestCode,
+    HttpCreatedCode,
+    HttpInternalErrorCode,
+    HttpNoContentCode,
+    HttpSuccessCode,
+    invalidUidMessage
+} from '../constants';
 import { MessageServiceInterface } from '../contracts/services/message';
 import { CacheRepositoryInterface } from '../contracts/repositories';
-import { MessageDto } from '../dto';
+import { MessageDTO } from '../dto';
 import { HttpError } from '../errors/HttpErrors';
 
 export default class MessageController {
@@ -14,6 +22,7 @@ export default class MessageController {
 
     index = async (req: Request, res: Response) => {
         const userUid = req.userUid;
+
         try {
             const cache = await this.cacheRepository.find('message:all');
 
@@ -27,7 +36,7 @@ export default class MessageController {
                 return {
                     uid: message.uid,
                     description: message.description,
-                    detailing: message.detailing
+                    detail: message.detail
                 };
             });
 
@@ -46,12 +55,18 @@ export default class MessageController {
             const cache = await this.cacheRepository.find(`message:${uid}`);
 
             if (cache) {
-                return res.status(200).json(cache);
+                return res.status(HttpSuccessCode).json(cache);
             }
 
             const message = await this.service.findOne(uid);
 
-            return res.status(200).json(message);
+            if (message) {
+                return res.status(HttpSuccessCode).json(message);
+            }
+
+            return res.status(HttpBadRequestCode).json({
+                message: invalidUidMessage
+            });
         } catch {
             throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
         }
@@ -60,12 +75,12 @@ export default class MessageController {
     store = async (req: Request, res: Response) => {
         const uid = uuid();
         const userUid = req.userUid;
-        const { description, detailing } = req.body;
+        const { description, detail } = req.body;
 
-        const dto: MessageDto = {
+        const dto: MessageDTO = {
             uid,
             description,
-            detailing,
+            detail,
             userUid
         };
 
@@ -76,7 +91,7 @@ export default class MessageController {
 
             await this.cacheRepository.save(`message:${message.uid}`, message);
 
-            return res.status(200).json(message);
+            return res.status(HttpCreatedCode).json(message);
         } catch {
             throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
         }
@@ -84,12 +99,12 @@ export default class MessageController {
 
     update = async (req: Request, res: Response) => {
         const { uid } = req.params;
-        const { description, detailing, userUid } = req.body;
+        const { description, detail, userUid } = req.body;
 
-        const dto: MessageDto = {
+        const dto: MessageDTO = {
             uid,
             description,
-            detailing,
+            detail,
             userUid
         };
 
@@ -99,9 +114,14 @@ export default class MessageController {
 
             const message = await this.service.update(dto);
 
-            await this.cacheRepository.save(`message:${uid}`, message);
+            if (message) {
+                await this.cacheRepository.save(`message:${uid}`, message);
+                return res.status(HttpSuccessCode).json(message);
+            }
 
-            return res.status(200).json(message);
+            return res.status(HttpBadRequestCode).json({
+                message: invalidUidMessage
+            });
         } catch {
             throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
         }
@@ -114,9 +134,13 @@ export default class MessageController {
             await this.cacheRepository.delete('message:all');
             await this.cacheRepository.delete(`message:${uid}`);
 
-            await this.service.delete(uid);
+            if ((await this.service.delete(uid)) === HttpNoContentCode) {
+                return res.sendStatus(HttpNoContentCode);
+            }
 
-            return res.sendStatus(204);
+            return res.status(HttpBadRequestCode).json({
+                message: invalidUidMessage
+            });
         } catch {
             throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
         }

@@ -3,3 +3,4 @@ export const defaultErrorMessage =
 export const invalidField = (field: string) => `${field} inválido!`;
 export const invalidUser = 'Usuário inválido!';
 export const invalidPassword = 'Senha incorreta!';
+export const invalidUidMessage = 'Menssagem não encontrada!';

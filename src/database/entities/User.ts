@@ -13,7 +13,7 @@ import { MessageEntity } from './Message';
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {
     @PrimaryColumn()
-    uid?: string;
+    uid: string;
 
     @Column()
     email: string;

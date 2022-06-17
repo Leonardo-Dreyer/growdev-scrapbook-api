@@ -13,6 +13,10 @@ export default class Application {
         this.#express = express();
     }
 
+    get server() {
+        return this.#express;
+    }
+
     async init() {
         this.config();
         this.middlewares();
@@ -21,6 +25,7 @@ export default class Application {
         await this.database();
     }
 
+    /* istanbul ignore next */
     start(port: number) {
         this.#express.listen(port, () => {
             console.log(`A aplicação está rodando na porta ${port}...`);

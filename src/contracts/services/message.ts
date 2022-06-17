@@ -1,10 +1,10 @@
-import { MessageEntity } from '../../database/entities/Message';
-import { MessageDto } from '../../dto';
+import { MessageDTO } from '../../dto';
+import { HttpError } from '../../errors/HttpErrors';
 
 export interface MessageServiceInterface {
-    find(uid: string): Promise<MessageEntity[]>;
-    findOne(uid: string): Promise<MessageEntity | undefined>;
-    create(messageDTO: MessageDto): Promise<MessageEntity>;
-    update(messageDTO: MessageDto): Promise<MessageEntity | undefined>;
-    delete(messageID: string): Promise<void>;
+    find(uid: string): Promise<MessageDTO[]>;
+    findOne(uid: string): Promise<MessageDTO | undefined>;
+    create(messageDTO: MessageDTO): Promise<MessageDTO>;
+    update(messageDTO: MessageDTO): Promise<MessageDTO | undefined>;
+    delete(messageID: string): Promise<HttpError | unknown>;
 }

@@ -5,14 +5,14 @@ import { UserDto } from '../dto';
 export class UserService implements UserServiceInterface {
     async findOne(email: string) {
         const repository = new UserRepositorie();
-        const messages = await repository.findOne(email);
+        const response: UserDto | undefined = await repository.findOne(email);
 
-        return messages;
+        return response;
     }
     async create(userDto: UserDto) {
         const repository = new UserRepositorie();
 
-        const user = await repository.create(userDto);
+        const user: UserDto = await repository.create(userDto);
 
         return user;
     }

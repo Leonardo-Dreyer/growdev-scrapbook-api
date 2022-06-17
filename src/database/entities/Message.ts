@@ -11,13 +11,13 @@ import { UserEntity } from './User';
 @Entity({ name: 'message' })
 export class MessageEntity extends BaseEntity {
     @PrimaryColumn()
-    uid?: string;
+    uid: string;
 
     @Column()
     description: string;
 
     @Column()
-    detailing: string;
+    detail: string;
 
     @Column({ name: 'user_uid' })
     userUid: string;
@@ -29,13 +29,13 @@ export class MessageEntity extends BaseEntity {
     constructor(
         uid: string,
         description: string,
-        detailing: string,
+        detail: string,
         userUid: string
     ) {
         super();
         this.uid = uid;
         this.description = description;
-        this.detailing = detailing;
+        this.detail = detail;
         this.userUid = userUid;
     }
 }

@@ -1,13 +1,7 @@
-import { Request, Response, NextFunction, response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { defaultErrorMessage, HttpUnauthorizedCode } from '../constants';
 import { HttpError } from '../errors/HttpErrors';
-
-interface TokenPayload {
-    uid: string;
-    iat: number;
-    exp: number;
-}
 
 export const authMiddleware = (
     req: Request,

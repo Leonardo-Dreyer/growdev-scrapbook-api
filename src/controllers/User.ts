@@ -3,7 +3,8 @@ import { v4 as uuid } from 'uuid';
 import {
     defaultErrorMessage,
     HttpBadRequestCode,
-    HttpInternalErrorCode
+    HttpCreatedCode,
+    HttpSuccessCode
 } from '../constants';
 import { UserServiceInterface } from '../contracts/services/user';
 import { UserDto } from '../dto';
@@ -13,7 +14,7 @@ export default class UserController {
     constructor(private service: UserServiceInterface) {}
 
     index = async (req: Request, res: Response) => {
-        return res.sendStatus(200);
+        return res.sendStatus(HttpSuccessCode);
     };
 
     store = async (req: Request, res: Response) => {
@@ -35,9 +36,9 @@ export default class UserController {
         try {
             await this.service.create(dto);
 
-            return res.sendStatus(201);
+            return res.sendStatus(HttpCreatedCode);
         } catch {
-            throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
+            throw new HttpError(defaultErrorMessage, HttpBadRequestCode);
         }
     };
 }

@@ -1,38 +1,40 @@
 import { MessageServiceInterface } from '../contracts/services/message';
 import { MessageRepositorie } from '../database/repositories/Message';
-import { MessageDto } from '../dto';
+import { MessageDTO } from '../dto';
 
 export class MessageService implements MessageServiceInterface {
-    create = async (messageDto: MessageDto) => {
+    async find(uid: string) {
         const repository = new MessageRepositorie();
-        const message = await repository.create(messageDto);
-
-        return message;
-    };
-
-    find = async (uid: string) => {
-        const repository = new MessageRepositorie();
-        const messages = await repository.find(uid);
+        const messages: MessageDTO[] = await repository.find(uid);
 
         return messages;
-    };
+    }
 
-    findOne = async (uid: string) => {
+    async findOne(uid: string) {
         const repository = new MessageRepositorie();
-        const message = await repository.findOne(uid);
+        const message: MessageDTO | undefined = await repository.findOne(uid);
 
         return message;
-    };
+    }
 
-    update = async (messageDto: MessageDto) => {
+    async create(messageDTO: MessageDTO) {
         const repository = new MessageRepositorie();
-        const message = await repository.update(messageDto);
+        const message: MessageDTO = await repository.create(messageDTO);
 
         return message;
-    };
+    }
 
-    delete = async (uid: string) => {
+    async update(messageDTO: MessageDTO) {
         const repository = new MessageRepositorie();
-        await repository.delete(uid);
-    };
+        const message: MessageDTO | undefined = await repository.update(
+            messageDTO
+        );
+
+        return message;
+    }
+
+    async delete(uid: string) {
+        const repository = new MessageRepositorie();
+        return await repository.delete(uid);
+    }
 }
